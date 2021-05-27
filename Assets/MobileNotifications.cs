@@ -76,7 +76,9 @@ public class MobileNotifications : MonoBehaviour
 
 
 
-
+    /// <summary>
+    /// Basics of sending a simple ANDROID notification
+    /// </summary>
     public void SendSimpleNotification()
     {
         var notification = new AndroidNotification();
@@ -90,6 +92,10 @@ public class MobileNotifications : MonoBehaviour
         notificationID = AndroidNotificationCenter.SendNotification(notification, "channel_id");
     }
 
+
+    /// <summary>
+    /// Basics of sending custom notification with intent information passed at the callback
+    /// </summary>
     public void SendCustomNotificaition()
     {
         var notification = new AndroidNotification();
@@ -101,7 +107,10 @@ public class MobileNotifications : MonoBehaviour
         AndroidNotificationCenter.SendNotification(notification, "channel_id");
     }
 
-
+    /// <summary>
+    /// Send a notification using DELTADNA Event Triggered campaign
+    /// </summary>
+    /// <param name="gameParameters"></param>
     public void SendDDNANotification(Dictionary<string, object> gameParameters)
     {
         notificationID = Convert.ToInt32(gameParameters["notificationId"]); //SET notification Id else comment this line to let the packagage generate one
@@ -138,6 +147,11 @@ public class MobileNotifications : MonoBehaviour
         //notificationID = AndroidNotificationCenter.SendNotification(notification, "channel_id");
 
     }
+
+    /// <summary>
+    /// Replace an schedule notification
+    /// This is great to be used if for example a carrot seed has grown into a carrot. previous queued notificaiton is no longer valid
+    /// </summary>
     public void HandleScheduledNotifications()
     {
         var newNotification = new AndroidNotification();
