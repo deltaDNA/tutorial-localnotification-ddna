@@ -125,27 +125,51 @@ public class MobileNotifications : MonoBehaviour
 
         AndroidNotificationCenter.SendNotificationWithExplicitID(notification, "channel_id", notificationID);
 
+        GameEvent localNotifications = new GameEvent("localNotifications");
+        localNotifications.AddParam("notificationId", Convert.ToInt32(gameParameters["notificationId"]));
+        localNotifications.AddParam("campaignId", Convert.ToInt32(gameParameters["campaignId"]));
+        localNotifications.AddParam("campaignName", gameParameters["campaignName"].ToString());
+        localNotifications.AddParam("cohortId", Convert.ToInt32(gameParameters["cohortId"]));
+        localNotifications.AddParam("cohortName", gameParameters["cohortName"].ToString());
+        localNotifications.AddParam("communicationSender", "Unity Mobile Notifications");
+        localNotifications.AddParam("communicationState", "SENT");
+        localNotifications.AddParam("localNotifTitle", notification.Title);
+        localNotifications.AddParam("localNotifDesc", notification.Text);
+        localNotifications.AddParam("localNotifTime", Convert.ToInt32(gameParameters["localNotifTime"])); 
 
-        GameEvent localNotification = new GameEvent("localNotification")
-           .AddParam("notificationId", gameParameters["notificationId"].ToString())
-           .AddParam("campaignId", gameParameters["campaignId"].ToString())
-           .AddParam("campaignName", gameParameters["campaignName"].ToString())
-           .AddParam("cohortId", gameParameters["cohortId"].ToString())
-           .AddParam("cohortName", gameParameters["cohortName"].ToString())
-           .AddParam("communicationSender", "Unity Mobile Notifications")
-           .AddParam("communicationState", "SENT")
-           .AddParam("localNotifTitle", notification.Title)
-           .AddParam("localNotifDesc", notification.Text)
-           .AddParam("localNotifTime", notification.FireTime);
+        //GameEvent localNotifications = new GameEvent("localNotifications")
+        //   .AddParam("notificationId", Convert.ToInt32(gameParameters["notificationId"]))
+        //   .AddParam("campaignId", Convert.ToInt32(gameParameters["campaignId"]))
+        //   .AddParam("campaignName", gameParameters["campaignName"].ToString())
+        //   .AddParam("cohortId", Convert.ToInt32(gameParameters["cohortId"]))
+        //   .AddParam("cohortName", gameParameters["cohortName"].ToString())
+        //   .AddParam("communicationSender", "Unity Mobile Notifications")
+        //   .AddParam("communicationState", "SENT")
+        //   .AddParam("localNotifTitle", notification.Title)
+        //   .AddParam("localNotifDesc", notification.Text)
+        //   .AddParam("localNotifTime", notification.FireTime);
 
         // Record the missionStarted event event with some event parameters. 
-        DDNA.Instance.RecordEvent(localNotification).Run();
+        DDNA.Instance.RecordEvent(localNotifications).Run();
 
 
 
         //Get Notification id for later
         //notificationID = AndroidNotificationCenter.SendNotification(notification, "channel_id");
 
+    }
+
+    public void CancelScheduledNotification(int notifId)
+    {
+        var notificationStatus = AndroidNotificationCenter.CheckScheduledNotificationStatus(notifId);
+
+        if (notificationStatus == NotificationStatus.Scheduled)
+        {
+            // Replace the scheduled notification with a new notification.
+            AndroidNotificationCenter.CancelNotification(notifId);
+
+            txtStatus.text = "Notification Cancelled "; 
+        }
     }
 
     /// <summary>

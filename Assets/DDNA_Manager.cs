@@ -22,32 +22,39 @@ public class DDNA_Manager : MonoBehaviour
     }
 
    
-    public void OnDDNAClick()
+    public void MissionCompleted(int level)
     {
-
-        GameEvent missionStartedEvent = new GameEvent("missionCompleted")
-            .AddParam("missionName", "Mission 01")
-            .AddParam("missionID", "1");
+        GameEvent missionComplete = new GameEvent("missionCompleted")
+            .AddParam("missionName", "Mission " + level.ToString())
+            .AddParam("missionID", level.ToString());
 
         // Record the missionStarted event event with some event parameters. 
-        DDNA.Instance.RecordEvent(missionStartedEvent).Run();
+        DDNA.Instance.RecordEvent(missionComplete).Run();
     }
 
-   
-
-
-    private void myGameParameterHandler(Dictionary<string, object> gameParameters)
+     private void myGameParameterHandler(Dictionary<string, object> gameParameters)
     {
         // Generic Game Parameter Handler
         Debug.Log("Received game parameters from Engage campaign: " + DeltaDNA.MiniJSON.Json.Serialize(gameParameters));
 
+
+
         // Handle ADS commands received from DDNA
         if (gameParameters.ContainsKey("localNotifTitle"))
         {
-            //Do something with this game parameter
+            if(gameParameters["localNotifTitle"].ToString().Contains("CANCEL"))
+            {
+                oMobileNotif.CancelScheduledNotification(Convert.ToInt32(gameParameters["notificationId"]));
+            }
+            else
+            {
+                //Do something with this game parameter
+                oMobileNotif.SendDDNANotification(gameParameters);
+            }
             
-            oMobileNotif.SendDDNANotification(gameParameters);
+
            
         }
+        
     }
 }
