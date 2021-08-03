@@ -48,10 +48,6 @@ public class DDNA_Manager : MonoBehaviour
             {
                 oMobileNotif.SendDDNANotification(gameParameters);
             }
-            
-
-           
         }
-        
     }
 }

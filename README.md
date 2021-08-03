@@ -65,10 +65,13 @@ The main parameters are mentioned above
 ## Campaign 
 Campaign setup for Mission completed
 ![Local notification](Images\camp1.png)
+
 Target Segment/Audience in this scenario we are targeting all players
 ![Local notification](Images\camp2.png)
+
 Trigger where in the game this campaign will activate
 ![Local notification](Images\camp3.png)
+
 We will send the game parameters for the notifcations
 ![Local notification](Images\camp4.png)
 
