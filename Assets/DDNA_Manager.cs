@@ -37,9 +37,7 @@ public class DDNA_Manager : MonoBehaviour
         // Generic Game Parameter Handler
         Debug.Log("Received game parameters from Engage campaign: " + DeltaDNA.MiniJSON.Json.Serialize(gameParameters));
 
-
-
-        // Handle ADS commands received from DDNA
+        //If we have a localnotificaiton game parameter being sent
         if (gameParameters.ContainsKey("localNotifTitle"))
         {
             if(gameParameters["localNotifTitle"].ToString().Contains("CANCEL"))
@@ -48,7 +46,6 @@ public class DDNA_Manager : MonoBehaviour
             }
             else
             {
-                //Do something with this game parameter
                 oMobileNotif.SendDDNANotification(gameParameters);
             }
             

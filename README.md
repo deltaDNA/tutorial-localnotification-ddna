@@ -20,9 +20,9 @@ You can watch the following video : TODO
 <div align="center">
       <a href="https://www.youtube.com/watch?v=cpcmpwYe1Jk">
      <img 
-      src="https://i.ytimg.com/vi/nVFiKqHmFLw/hqdefault.jpg?sqp=-oaymwEZCPYBEIoBSFXyq4qpAwsIARUAAIhCGAFwAQ==&amp;rs=AOn4CLApk_nJo0cOmRkVnAQh3mhs2VeQnw" 
+      src="Images\game.png" 
       alt="DDNA Unity Mobile Notifications" 
-      style="width:75%;">
+      style="width:25%;">
       </a>
 </div>
 
@@ -74,8 +74,67 @@ We will send the game parameters for the notifcations
 
 
 ## Code
+These are the main snippets of code for a full comprehensive on mobile notifcations feel free to check out the code in github
 
-The following code snippet shows the Game Parameter callback.
+Game handler to handle the campaign send
 ```csharp
-TODO
+ private void myGameParameterHandler(Dictionary<string, object> gameParameters)
+    {
+        // Generic Game Parameter Handler
+        Debug.Log("Received game parameters from Engage campaign: " + DeltaDNA.MiniJSON.Json.Serialize(gameParameters));
+
+        //If we have a localnotificaiton game parameter being sent
+        if (gameParameters.ContainsKey("localNotifTitle"))
+        {
+            if(gameParameters["localNotifTitle"].ToString().Contains("CANCEL"))
+            {
+                oMobileNotif.CancelScheduledNotification(Convert.ToInt32(gameParameters["notificationId"]));
+            }
+            else
+            {
+                oMobileNotif.SendDDNANotification(gameParameters);
+            }
+        }
+    }
 ```
+
+The following code snippet is how we actually send the local notification
+```csharp
+public void SendDDNANotification(Dictionary<string, object> gameParameters)
+    {
+        //Prepare the unity mobile notificaitons
+        notificationID = Convert.ToInt32(gameParameters["notificationId"]); //SET notification Id else comment this line to let the packagage generate one
+        var notification = new AndroidNotification();
+        notification.IntentData = "{\"campaignId\": \"id 1\", \"campaignName\": \"name\",\"notificationId\": \"id 1\",}";
+        notification.SmallIcon = "my_custom_icon_id";
+        notification.LargeIcon = "my_custom_large_icon_id";
+        notification.Title = gameParameters["localNotifTitle"].ToString();
+        notification.Text = gameParameters["localNotifDesc"].ToString();
+        notification.FireTime = System.DateTime.Now.AddMinutes(Convert.ToDouble(gameParameters["localNotifTime"])); // Time in minutes
+       
+        //Send the notification with unity mobile notifications
+        AndroidNotificationCenter.SendNotificationWithExplicitID(notification, "channel_id", notificationID);
+
+
+        //Record the event for reporting services
+        GameEvent localNotifications = new GameEvent("localNotifications");
+        localNotifications.AddParam("notificationId", Convert.ToInt32(gameParameters["notificationId"]));
+        localNotifications.AddParam("campaignId", Convert.ToInt32(gameParameters["campaignId"]));
+        localNotifications.AddParam("campaignName", gameParameters["campaignName"].ToString());
+        localNotifications.AddParam("cohortId", Convert.ToInt32(gameParameters["cohortId"]));
+        localNotifications.AddParam("cohortName", gameParameters["cohortName"].ToString());
+        localNotifications.AddParam("communicationSender", "Unity Mobile Notifications");
+        localNotifications.AddParam("communicationState", "SENT");
+        localNotifications.AddParam("localNotifTitle", notification.Title);
+        localNotifications.AddParam("localNotifDesc", notification.Text);
+        localNotifications.AddParam("localNotifTime", Convert.ToInt32(gameParameters["localNotifTime"])); 
+
+        // Record the missionStarted event event with some event parameters. 
+        DDNA.Instance.RecordEvent(localNotifications).Run();
+
+        //Get Notification id for later (Can be ignored we pass the notificaitonid with DDNA campaign game parameters)
+        //notificationID = AndroidNotificationCenter.SendNotification(notification, "channel_id");
+
+    }
+```
+

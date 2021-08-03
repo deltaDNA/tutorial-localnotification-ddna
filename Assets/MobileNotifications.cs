@@ -38,7 +38,7 @@ public class MobileNotifications : MonoBehaviour
             
             txtStatus.text = msg;
 
-
+          //Handle events for reporting
           //  GameEvent localNotification = new GameEvent("localNotification")
           //.AddParam("campaignId", gameParameters["campaignId"].ToString())
           //.AddParam("campaignName", gameParameters["campaignName"].ToString())
@@ -56,8 +56,6 @@ public class MobileNotifications : MonoBehaviour
 
         };
 
-
-
         //Get intentinfo
         AndroidNotificationCenter.OnNotificationReceived += receivedNotificationHandler;
         var notificationIntentData = AndroidNotificationCenter.GetLastNotificationIntent();
@@ -69,9 +67,6 @@ public class MobileNotifications : MonoBehaviour
 
             txtStatus.text += "\n INTENT" + id.ToString() + " " + channel.ToString() + " " + notification.IntentData;
         }
-
-
-
     }
 
 
@@ -113,6 +108,7 @@ public class MobileNotifications : MonoBehaviour
     /// <param name="gameParameters"></param>
     public void SendDDNANotification(Dictionary<string, object> gameParameters)
     {
+        //Prepare the unity mobile notificaitons
         notificationID = Convert.ToInt32(gameParameters["notificationId"]); //SET notification Id else comment this line to let the packagage generate one
         var notification = new AndroidNotification();
         notification.IntentData = "{\"campaignId\": \"id 1\", \"campaignName\": \"name\",\"notificationId\": \"id 1\",}";
@@ -122,9 +118,11 @@ public class MobileNotifications : MonoBehaviour
         notification.Text = gameParameters["localNotifDesc"].ToString();
         notification.FireTime = System.DateTime.Now.AddMinutes(Convert.ToDouble(gameParameters["localNotifTime"]));
        
-
+        //Send the notification with unity mobile notifications
         AndroidNotificationCenter.SendNotificationWithExplicitID(notification, "channel_id", notificationID);
 
+
+        //Record the event for reporting services
         GameEvent localNotifications = new GameEvent("localNotifications");
         localNotifications.AddParam("notificationId", Convert.ToInt32(gameParameters["notificationId"]));
         localNotifications.AddParam("campaignId", Convert.ToInt32(gameParameters["campaignId"]));
@@ -140,7 +138,7 @@ public class MobileNotifications : MonoBehaviour
         // Record the missionStarted event event with some event parameters. 
         DDNA.Instance.RecordEvent(localNotifications).Run();
 
-        //Get Notification id for later
+        //Get Notification id for later (Can be ignored we pass the notificaitonid with DDNA campaign game parameters)
         //notificationID = AndroidNotificationCenter.SendNotification(notification, "channel_id");
 
     }
