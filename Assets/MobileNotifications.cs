@@ -137,22 +137,8 @@ public class MobileNotifications : MonoBehaviour
         localNotifications.AddParam("localNotifDesc", notification.Text);
         localNotifications.AddParam("localNotifTime", Convert.ToInt32(gameParameters["localNotifTime"])); 
 
-        //GameEvent localNotifications = new GameEvent("localNotifications")
-        //   .AddParam("notificationId", Convert.ToInt32(gameParameters["notificationId"]))
-        //   .AddParam("campaignId", Convert.ToInt32(gameParameters["campaignId"]))
-        //   .AddParam("campaignName", gameParameters["campaignName"].ToString())
-        //   .AddParam("cohortId", Convert.ToInt32(gameParameters["cohortId"]))
-        //   .AddParam("cohortName", gameParameters["cohortName"].ToString())
-        //   .AddParam("communicationSender", "Unity Mobile Notifications")
-        //   .AddParam("communicationState", "SENT")
-        //   .AddParam("localNotifTitle", notification.Title)
-        //   .AddParam("localNotifDesc", notification.Text)
-        //   .AddParam("localNotifTime", notification.FireTime);
-
         // Record the missionStarted event event with some event parameters. 
         DDNA.Instance.RecordEvent(localNotifications).Run();
-
-
 
         //Get Notification id for later
         //notificationID = AndroidNotificationCenter.SendNotification(notification, "channel_id");
