@@ -60,19 +60,24 @@ Additional parameters can be added to record data such as notificationID if mana
 ## In Game Action
 In game action can be created as follows, time is in minutes in this example
 The main parameters are mentioned above
+
 ![Local notification](Images\localnotificationaction.png)
 
 ## Campaign 
 Campaign setup for Mission completed
+
 ![Local notification](Images\camp1.png)
 
 Target Segment/Audience in this scenario we are targeting all players
+
 ![Local notification](Images\camp2.png)
 
 Trigger where in the game this campaign will activate
+
 ![Local notification](Images\camp3.png)
 
 We will send the game parameters for the notifcations
+
 ![Local notification](Images\camp4.png)
 
 
