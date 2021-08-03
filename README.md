@@ -32,17 +32,12 @@ This tutorial demonstrates:
 1) Basics of local notifications
 2) DeltaDNA campaign triggered push notifications on mission completion being able to cancel a notification for players who complete 
 
-## Event Triggered Campaigns
-As their name suggests, Event Triggered Campaigns use the events that your player is generating whilst playing to trigger a campaign that performs an action in the game immediately. 
 
-Game Parameter Actions are used to send data to the game.
-
-Game Parameters will be used to instruct the game to show an local notification
 
 ## Event Managment
 A new event called **localNotification** should be created with the following game parameters. This event will be used to record opening the local push notification
 
-![Local notification](Images\localnotificationevent.png)
+![Local notification event](Images/localnotificationevent.png)
 
 ## Game Parameters
 
@@ -61,24 +56,30 @@ Additional parameters can be added to record data such as notificationID if mana
 In game action can be created as follows, time is in minutes in this example
 The main parameters are mentioned above
 
-![Local notification](Images\localnotificationaction.png)
+![Local notification game parameters](Images/localnotificationaction.png)
 
-## Campaign 
+## Event Triggered Campaigns
+As their name suggests, Event Triggered Campaigns use the events that your player is generating whilst playing to trigger a campaign that performs an action in the game immediately. 
+
+Game Parameter Actions are used to send data to the game.
+
+Game Parameters will be used to instruct the game to show an local notification
+
 Campaign setup for Mission completed
 
-![Local notification](Images\camp1.png)
+![Local notification campaigns](Images/camp1.png)
 
 Target Segment/Audience in this scenario we are targeting all players
 
-![Local notification](Images\camp2.png)
+![Local notification campaigns](Images/camp2.png)
 
 Trigger where in the game this campaign will activate
 
-![Local notification](Images\camp3.png)
+![Local notification campaigns](Images/camp3.png)
 
 We will send the game parameters for the notifcations
 
-![Local notification](Images\camp4.png)
+![Local notification campaigns](Images/camp4.png)
 
 
 ## Code
