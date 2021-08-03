@@ -4,11 +4,13 @@
 Using the power of mobile notifications package included with Unity, you can now target users quickly. Combined with the power of DDNA campaigns
 You can trigger notifications in a few minutes after a certain action is completed in the game.
 
-## Packages used:
-- Unity Mobile Notifications 1.4.2
+## Requirements:
+- Unity 2020.3.12f1 
+- Unity Mobile Notifications
 https://docs.unity3d.com/Packages/com.unity.mobile.notifications@1.4/manual/index.html
 - Unity DeltaDNA SDK
 https://github.com/deltaDNA/unity-sdk/releases
+
 
 You will learn how to: 
 
@@ -20,7 +22,7 @@ You can watch the following video : TODO
 <div align="center">
       <a href="https://www.youtube.com/watch?v=cpcmpwYe1Jk">
      <img 
-      src="Images\game.png" 
+      src="Images/game.png" 
       alt="DDNA Unity Mobile Notifications" 
       style="width:25%;">
       </a>
@@ -29,8 +31,10 @@ You can watch the following video : TODO
     
 ## Scenarios
 This tutorial demonstrates:
-1) Basics of local notifications
-2) DeltaDNA campaign triggered push notifications on mission completion being able to cancel a notification for players who complete 
+1) Basics of Unity local notifications local notifications
+2) DeltaDNA campaign triggered push notifications on mission completion 
+3) Cancel a notification for players who completeded the next level
+
 
 
 
@@ -81,10 +85,38 @@ We will send the game parameters for the notifcations
 
 ![Local notification campaigns](Images/camp4.png)
 
+We also can create a CANCEL notification this would be used to cancel a scheduled notification.
+
+Action with parameters for cancel specify notificaiton ID and action
+
+![Local notification campaigns](Images/cancelnotif.png)
+
+Campaign setup
+
+![Local notification campaigns](Images/cancelnotif1.png)
+
+Trigger action
+
+![Local notification campaigns](Images/cancelnotif2.png)
 
 ## Code
 These are the main snippets of code for a full comprehensive on mobile notifcations feel free to check out the code in github
 
+
+Register the game parameter handler
+```csharp
+ void Start()
+    {
+        DDNA.Instance.SetLoggingLevel(DeltaDNA.Logger.Level.DEBUG);
+        DDNA.Instance.StartSDK();
+        DDNA.Instance.Settings.DefaultGameParameterHandler = new GameParametersHandler(gameParameters =>
+        {
+            // do something with the game parameters
+            myGameParameterHandler(gameParameters);
+        });
+   
+    }
+```
 Game handler to handle the campaign send
 ```csharp
  private void myGameParameterHandler(Dictionary<string, object> gameParameters)
