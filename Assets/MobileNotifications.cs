@@ -1,6 +1,12 @@
 using System;
 using System.Collections.Generic;
-using Unity.Notifications.Android;
+
+#if UNITY_ANDROID
+using Unity.Notifications;
+#elif UNITY_IOS
+using Unity.Notifications.iOS;
+#endif
+
 using UnityEngine;
 using UnityEngine.UI;
 using DeltaDNA;
@@ -12,7 +18,8 @@ public class MobileNotifications : MonoBehaviour
 
     private void Awake()
     {
-        var channel = new AndroidNotificationChannel()
+#if UNITY_ANDROID
+        var channel = new Android.AndroidNotificationChannel()
         {
             Id = "channel_id",
             Name = "Default Channel",
@@ -20,11 +27,29 @@ public class MobileNotifications : MonoBehaviour
             Description = "Generic notifications",
         };
         AndroidNotificationCenter.RegisterNotificationChannel(channel);
+#elif UNITY_IOS
+      /*  using (var req = new AuthorizationRequest(AuthorizationOption.Alert | AuthorizationOption.Badge, true))
+        {
+            while (!req.IsFinished)
+            {
+                yield return null;
+            };
+
+            string result = "\n RequestAuthorization: \n";
+            result += "\n finished: " + req.IsFinished;
+            result += "\n granted :  " + req.Granted;
+            result += "\n error:  " + req.Error;
+            result += "\n deviceToken:  " + req.DeviceToken;
+            Debug.Log(result);
+        }*/
+#endif
+
     }
 
     // Start is called before the first frame update
     void Start()
     {
+#if UNITY_ANDROID
          AndroidNotificationCenter.NotificationReceivedCallback receivedNotificationHandler =
         delegate (AndroidNotificationIntentData data)
         {
@@ -67,6 +92,7 @@ public class MobileNotifications : MonoBehaviour
 
             txtStatus.text += "\n INTENT" + id.ToString() + " " + channel.ToString() + " " + notification.IntentData;
         }
+#endif
     }
 
 
@@ -76,6 +102,7 @@ public class MobileNotifications : MonoBehaviour
     /// </summary>
     public void SendSimpleNotification()
     {
+        #if UNITY_ANDROID
         var notification = new AndroidNotification();
         notification.SmallIcon = "my_custom_icon_id";
         notification.LargeIcon = "my_custom_large_icon_id";
@@ -85,6 +112,7 @@ public class MobileNotifications : MonoBehaviour
 
         //Get Notification id for later
         notificationID = AndroidNotificationCenter.SendNotification(notification, "channel_id");
+#endif
     }
 
 
@@ -93,6 +121,7 @@ public class MobileNotifications : MonoBehaviour
     /// </summary>
     public void SendCustomNotificaition()
     {
+#if UNITY_ANDROID
         var notification = new AndroidNotification();
         notification.IntentData = "{\"title\": \"Notification 1\", \"data\": \"200\"}";
         notification.SmallIcon = "my_custom_icon_id"; //PNG file needs to be placed in /Assets/Plugins/Android/res/drawable
@@ -100,6 +129,7 @@ public class MobileNotifications : MonoBehaviour
         notification.Title = "Custom Notification Title";
         notification.Text = "Custom Text";
         AndroidNotificationCenter.SendNotification(notification, "channel_id");
+#endif
     }
 
     /// <summary>
@@ -108,8 +138,10 @@ public class MobileNotifications : MonoBehaviour
     /// <param name="gameParameters"></param>
     public void SendDDNANotification(Dictionary<string, object> gameParameters)
     {
+
         //Prepare the unity mobile notificaitons
         notificationID = Convert.ToInt32(gameParameters["notificationId"]); //SET notification Id else comment this line to let the packagage generate one
+#if UNITY_ANDROID
         var notification = new AndroidNotification();
         notification.IntentData = "{\"campaignId\": \"id 1\", \"campaignName\": \"name\",\"notificationId\": \"id 1\",}";
         notification.SmallIcon = "my_custom_icon_id";
@@ -120,7 +152,9 @@ public class MobileNotifications : MonoBehaviour
        
         //Send the notification with unity mobile notifications
         AndroidNotificationCenter.SendNotificationWithExplicitID(notification, "channel_id", notificationID);
-
+#elif UNITY_IOS
+        var notification = new iOSNotification();
+#endif
 
         //Record the event for reporting services
         GameEvent localNotifications = new GameEvent("localNotifications");
@@ -132,7 +166,7 @@ public class MobileNotifications : MonoBehaviour
         localNotifications.AddParam("communicationSender", "Unity Mobile Notifications");
         localNotifications.AddParam("communicationState", "SENT");
         localNotifications.AddParam("localNotifTitle", notification.Title);
-        localNotifications.AddParam("localNotifDesc", notification.Text);
+        localNotifications.AddParam("localNotifDesc", notification.Body); // TODO should be Text field on Android !?!
         localNotifications.AddParam("localNotifTime", Convert.ToInt32(gameParameters["localNotifTime"])); 
 
         // Record the missionStarted event event with some event parameters. 
@@ -145,6 +179,7 @@ public class MobileNotifications : MonoBehaviour
 
     public void CancelScheduledNotification(int notifId)
     {
+#if UNITY_ANDROID
         var notificationStatus = AndroidNotificationCenter.CheckScheduledNotificationStatus(notifId);
 
         if (notificationStatus == NotificationStatus.Scheduled)
@@ -154,6 +189,8 @@ public class MobileNotifications : MonoBehaviour
 
             txtStatus.text = "Notification Cancelled "; 
         }
+//#elif
+#endif
     }
 
     /// <summary>
@@ -162,6 +199,9 @@ public class MobileNotifications : MonoBehaviour
     /// </summary>
     public void HandleScheduledNotifications()
     {
+
+#if UNITY_ANDROID
+
         var newNotification = new AndroidNotification();
         newNotification.SmallIcon = "my_custom_icon_id";
         newNotification.LargeIcon = "my_custom_large_icon_id";
@@ -186,8 +226,6 @@ public class MobileNotifications : MonoBehaviour
         {
             AndroidNotificationCenter.SendNotification(newNotification, "channel_id");
         }
+#endif
     }
-
-
-
 }
