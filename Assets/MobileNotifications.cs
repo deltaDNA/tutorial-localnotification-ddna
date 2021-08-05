@@ -102,7 +102,7 @@ public class MobileNotifications : MonoBehaviour
     /// </summary>
     public void SendSimpleNotification()
     {
-        #if UNITY_ANDROID
+#if UNITY_ANDROID
         var notification = new AndroidNotification();
         notification.SmallIcon = "my_custom_icon_id";
         notification.LargeIcon = "my_custom_large_icon_id";
@@ -112,6 +112,24 @@ public class MobileNotifications : MonoBehaviour
 
         //Get Notification id for later
         notificationID = AndroidNotificationCenter.SendNotification(notification, "channel_id");
+#elif UNITY_IOS
+        DateTime date = System.DateTime.Now.AddMinutes(1);
+        var notification = new iOSNotification();
+        //notification.BadgeSmallIcon = "my_custom_icon_id";
+        //notification.LargeIcon = "my_custom_large_icon_id";
+        notification.Title = "Your Title";
+        notification.Body = "Your Text";
+        notification.Trigger = new iOSNotificationCalendarTrigger
+        {
+            Year = date.Year,
+            Month = date.Month,
+            Day = date.Day,
+            Hour = date.Hour,
+            Minute = date.Minute,
+            Second = date.Second
+        };
+        iOSNotificationCenter.ScheduleNotification(notification);
+        Debug.Log("Sceduled Notification");
 #endif
     }
 
@@ -154,6 +172,26 @@ public class MobileNotifications : MonoBehaviour
         AndroidNotificationCenter.SendNotificationWithExplicitID(notification, "channel_id", notificationID);
 #elif UNITY_IOS
         var notification = new iOSNotification();
+        System.DateTime date = System.DateTime.Now.AddMinutes(Convert.ToDouble(gameParameters["localNotifTime"]));
+
+        //notification.IntentData = "{\"campaignId\": \"id 1\", \"campaignName\": \"name\",\"notificationId\": \"id 1\",}";
+        //notification.SmallIcon = "my_custom_icon_id";
+        //notification.LargeIcon = "my_custom_large_icon_id";
+        notification.Title = gameParameters["localNotifTitle"].ToString();
+        notification.Body = gameParameters["localNotifDesc"].ToString();
+        notification.Trigger = notification.Trigger = new iOSNotificationCalendarTrigger
+        {
+            Year = date.Year,
+            Month = date.Month,
+            Day = date.Day,
+            Hour = date.Hour,
+            Minute = date.Minute,
+            Second = date.Second
+        };
+        //Send the notification with unity mobile notifications
+        iOSNotificationCenter.ScheduleNotification(notification);
+        Debug.Log("Sceduled Notification");               
+
 #endif
 
         //Record the event for reporting services
