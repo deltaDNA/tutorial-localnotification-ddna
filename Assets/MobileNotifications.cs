@@ -11,10 +11,22 @@ using UnityEngine;
 using UnityEngine.UI;
 using DeltaDNA;
 
+
+
+
 public class MobileNotifications : MonoBehaviour
 {
     public Text txtStatus;
     int notificationID;
+
+
+    private void DefineCustomNotificationActions()
+    {
+#if UNITY_IOS
+       
+#endif
+    }
+
 
     private void Awake()
     {
@@ -92,6 +104,32 @@ public class MobileNotifications : MonoBehaviour
 
             txtStatus.text += "\n INTENT" + id.ToString() + " " + channel.ToString() + " " + notification.IntentData;
         }
+#elif UNITY_IOS
+        iOSNotificationCenter.OnRemoteNotificationReceived += remoteNotification =>
+        {
+
+            /*remoteNotification.CategoryIdentifier
+            // When a remote notification is received, modify its contents and show it after 1 second.
+            var timeTrigger = new iOSNotificationTimeIntervalTrigger()
+            {
+                TimeInterval = new TimeSpan(0, 0, 1),
+                Repeats = false
+            };
+
+            iOSNotification notification = new iOSNotification()
+            {
+                Title = "Remote: " + remoteNotification.Title,
+                Body = "Remote: " + remoteNotification.Body,
+                Subtitle = "Remote: " + remoteNotification.Subtitle,
+                ShowInForeground = true,
+                ForegroundPresentationOption = PresentationOption.Sound | PresentationOption.Alert,
+                CategoryIdentifier = remoteNotification.CategoryIdentifier,
+                ThreadIdentifier = remoteNotification.ThreadIdentifier,
+                Trigger = timeTrigger,
+            };
+            iOSNotificationCenter.ScheduleNotification(notification);*/
+            Debug.Log("Remote notification received");
+        };
 #endif
     }
 
@@ -119,7 +157,7 @@ public class MobileNotifications : MonoBehaviour
         //notification.LargeIcon = "my_custom_large_icon_id";
         notification.Title = "Your Title";
         notification.Body = "Your Text";
-        notification.Trigger = new iOSNotificationCalendarTrigger
+        /*notification.Trigger = new iOSNotificationCalendarTrigger
         {
             Year = date.Year,
             Month = date.Month,
@@ -127,7 +165,15 @@ public class MobileNotifications : MonoBehaviour
             Hour = date.Hour,
             Minute = date.Minute,
             Second = date.Second
+        };*/
+        notification.Trigger = new iOSNotificationTimeIntervalTrigger
+        {
+            TimeInterval = new TimeSpan(0, 0, 5),
+            Repeats = false
         };
+        notification.CategoryIdentifier = "GOLD_REWARD";
+        notification.ShowInForeground = true;
+
         iOSNotificationCenter.ScheduleNotification(notification);
         Debug.Log("Sceduled Notification");
 #endif
@@ -188,6 +234,7 @@ public class MobileNotifications : MonoBehaviour
             Minute = date.Minute,
             Second = date.Second
         };
+        notification.CategoryIdentifier = "GOLD_REWARD";
         //Send the notification with unity mobile notifications
         iOSNotificationCenter.ScheduleNotification(notification);
         Debug.Log("Sceduled Notification");               
