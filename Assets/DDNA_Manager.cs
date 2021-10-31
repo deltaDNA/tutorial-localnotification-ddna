@@ -20,8 +20,11 @@ public class DDNA_Manager : MonoBehaviour
         });
    
     }
+    void OnApplicationQuit()
+    {
+        Debug.Log("Application ending after " + Time.time + " seconds");
+    }
 
-   
     public void MissionCompleted(int level)
     {
         GameEvent missionComplete = new GameEvent("missionCompleted")

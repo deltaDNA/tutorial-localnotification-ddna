@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 #if UNITY_ANDROID
-using Unity.Notifications;
+using Unity.Notifications.Android;
 #elif UNITY_IOS
 using Unity.Notifications.iOS;
 #endif
@@ -31,7 +31,7 @@ public class MobileNotifications : MonoBehaviour
     private void Awake()
     {
 #if UNITY_ANDROID
-        var channel = new Android.AndroidNotificationChannel()
+        var channel = new AndroidNotificationChannel()
         {
             Id = "channel_id",
             Name = "Default Channel",
@@ -251,7 +251,12 @@ public class MobileNotifications : MonoBehaviour
         localNotifications.AddParam("communicationSender", "Unity Mobile Notifications");
         localNotifications.AddParam("communicationState", "SENT");
         localNotifications.AddParam("localNotifTitle", notification.Title);
-        localNotifications.AddParam("localNotifDesc", notification.Body); // TODO should be Text field on Android !?!
+
+#if UNITY_IOS
+        localNotifications.AddParam("localNotifDesc", notification.Body); 
+#elif UNITY_ANDROID
+         localNotifications.AddParam("localNotifDesc", notification.Text); 
+#endif
         localNotifications.AddParam("localNotifTime", Convert.ToInt32(gameParameters["localNotifTime"])); 
 
         // Record the missionStarted event event with some event parameters. 
