@@ -1,17 +1,14 @@
 using System;
 using System.Collections.Generic;
-
-#if UNITY_ANDROID
-using Unity.Notifications.Android;
-#elif UNITY_IOS
-using Unity.Notifications.iOS;
-#endif
-
 using UnityEngine;
 using UnityEngine.UI;
 using DeltaDNA;
 
-
+#if UNITY_ANDROID
+    using Unity.Notifications.Android;
+#elif UNITY_IOS
+    using Unity.Notifications.iOS;
+#endif
 
 
 public class MobileNotifications : MonoBehaviour
@@ -19,14 +16,7 @@ public class MobileNotifications : MonoBehaviour
     public Text txtStatus;
     int notificationID;
 
-
-    private void DefineCustomNotificationActions()
-    {
-#if UNITY_IOS
        
-#endif
-    }
-
 
     private void Awake()
     {
@@ -35,7 +25,7 @@ public class MobileNotifications : MonoBehaviour
         {
             Id = "channel_id",
             Name = "Default Channel",
-            Importance = Importance.Default,
+            Importance = Importance.High,
             Description = "Generic notifications",
         };
         AndroidNotificationCenter.RegisterNotificationChannel(channel);
@@ -75,22 +65,6 @@ public class MobileNotifications : MonoBehaviour
             
             txtStatus.text = msg;
 
-          //Handle events for reporting
-          //  GameEvent localNotification = new GameEvent("localNotification")
-          //.AddParam("campaignId", gameParameters["campaignId"].ToString())
-          //.AddParam("campaignName", gameParameters["campaignName"].ToString())
-          //.AddParam("cohortId", gameParameters["cohortId"].ToString())
-          //.AddParam("cohortName", gameParameters["cohortName"].ToString())
-          //.AddParam("communicationSender", "Unity Mobile Notifications")
-          //.AddParam("communicationState", "OPEN")
-          //.AddParam("localNotifTitle", notification.Title)
-          //.AddParam("localNotifDesc", notification.Text)
-          //.AddParam("localNotifTime", notification.FireTime);
-
-          //  // Record the missionStarted event event with some event parameters. 
-          //  DDNA.Instance.RecordEvent(localNotification).Run();
-
-
         };
 
         //Get intentinfo
@@ -101,6 +75,7 @@ public class MobileNotifications : MonoBehaviour
             var id = notificationIntentData.Id;
             var channel = notificationIntentData.Channel;
             var notification = notificationIntentData.Notification;
+            
 
             txtStatus.text += "\n INTENT" + id.ToString() + " " + channel.ToString() + " " + notification.IntentData;
         }
@@ -134,67 +109,7 @@ public class MobileNotifications : MonoBehaviour
     }
 
 
-
-    /// <summary>
-    /// Basics of sending a simple ANDROID notification
-    /// </summary>
-    public void SendSimpleNotification()
-    {
-#if UNITY_ANDROID
-        var notification = new AndroidNotification();
-        notification.SmallIcon = "my_custom_icon_id";
-        notification.LargeIcon = "my_custom_large_icon_id";
-        notification.Title = "Your Title";
-        notification.Text = "Your Text";
-        notification.FireTime = System.DateTime.Now.AddMinutes(1);
-
-        //Get Notification id for later
-        notificationID = AndroidNotificationCenter.SendNotification(notification, "channel_id");
-#elif UNITY_IOS
-        DateTime date = System.DateTime.Now.AddMinutes(1);
-        var notification = new iOSNotification();
-        //notification.BadgeSmallIcon = "my_custom_icon_id";
-        //notification.LargeIcon = "my_custom_large_icon_id";
-        notification.Title = "Your Title";
-        notification.Body = "Your Text";
-        /*notification.Trigger = new iOSNotificationCalendarTrigger
-        {
-            Year = date.Year,
-            Month = date.Month,
-            Day = date.Day,
-            Hour = date.Hour,
-            Minute = date.Minute,
-            Second = date.Second
-        };*/
-        notification.Trigger = new iOSNotificationTimeIntervalTrigger
-        {
-            TimeInterval = new TimeSpan(0, 0, 5),
-            Repeats = false
-        };
-        notification.CategoryIdentifier = "GOLD_REWARD";
-        notification.ShowInForeground = true;
-
-        iOSNotificationCenter.ScheduleNotification(notification);
-        Debug.Log("Sceduled Notification");
-#endif
-    }
-
-
-    /// <summary>
-    /// Basics of sending custom notification with intent information passed at the callback
-    /// </summary>
-    public void SendCustomNotificaition()
-    {
-#if UNITY_ANDROID
-        var notification = new AndroidNotification();
-        notification.IntentData = "{\"title\": \"Notification 1\", \"data\": \"200\"}";
-        notification.SmallIcon = "my_custom_icon_id"; //PNG file needs to be placed in /Assets/Plugins/Android/res/drawable
-        notification.LargeIcon = "my_custom_large_icon_id"; //PNG file needs to be placed in /Assets/Plugins/Android/res/drawable
-        notification.Title = "Custom Notification Title";
-        notification.Text = "Custom Text";
-        AndroidNotificationCenter.SendNotification(notification, "channel_id");
-#endif
-    }
+    
 
     /// <summary>
     /// Send a notification using DELTADNA Event Triggered campaign
@@ -282,7 +197,7 @@ public class MobileNotifications : MonoBehaviour
 //#elif
 #endif
     }
-
+    /*
     /// <summary>
     /// Replace an schedule notification
     /// This is great to be used if for example a carrot seed has grown into a carrot. previous queued notificaiton is no longer valid
@@ -317,5 +232,5 @@ public class MobileNotifications : MonoBehaviour
             AndroidNotificationCenter.SendNotification(newNotification, "channel_id");
         }
 #endif
-    }
+    }*/
 }
