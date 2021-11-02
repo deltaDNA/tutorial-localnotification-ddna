@@ -30,23 +30,11 @@ public class MobileNotifications : MonoBehaviour
         };
         AndroidNotificationCenter.RegisterNotificationChannel(channel);
 #elif UNITY_IOS
-      /*  using (var req = new AuthorizationRequest(AuthorizationOption.Alert | AuthorizationOption.Badge, true))
-        {
-            while (!req.IsFinished)
-            {
-                yield return null;
-            };
-
-            string result = "\n RequestAuthorization: \n";
-            result += "\n finished: " + req.IsFinished;
-            result += "\n granted :  " + req.Granted;
-            result += "\n error:  " + req.Error;
-            result += "\n deviceToken:  " + req.DeviceToken;
-            Debug.Log(result);
-        }*/
+        // IOS Seems to work OK without any explicit registration for local notifications
 #endif
 
     }
+
 
     // Start is called before the first frame update
     void Start()
@@ -82,28 +70,7 @@ public class MobileNotifications : MonoBehaviour
 #elif UNITY_IOS
         iOSNotificationCenter.OnRemoteNotificationReceived += remoteNotification =>
         {
-
-            /*remoteNotification.CategoryIdentifier
-            // When a remote notification is received, modify its contents and show it after 1 second.
-            var timeTrigger = new iOSNotificationTimeIntervalTrigger()
-            {
-                TimeInterval = new TimeSpan(0, 0, 1),
-                Repeats = false
-            };
-
-            iOSNotification notification = new iOSNotification()
-            {
-                Title = "Remote: " + remoteNotification.Title,
-                Body = "Remote: " + remoteNotification.Body,
-                Subtitle = "Remote: " + remoteNotification.Subtitle,
-                ShowInForeground = true,
-                ForegroundPresentationOption = PresentationOption.Sound | PresentationOption.Alert,
-                CategoryIdentifier = remoteNotification.CategoryIdentifier,
-                ThreadIdentifier = remoteNotification.ThreadIdentifier,
-                Trigger = timeTrigger,
-            };
-            iOSNotificationCenter.ScheduleNotification(notification);*/
-            Debug.Log("Remote notification received");
+           Debug.Log("Remote notification received");
         };
 #endif
     }
@@ -135,9 +102,7 @@ public class MobileNotifications : MonoBehaviour
         var notification = new iOSNotification();
         System.DateTime date = System.DateTime.Now.AddMinutes(Convert.ToDouble(gameParameters["localNotifTime"]));
 
-        //notification.IntentData = "{\"campaignId\": \"id 1\", \"campaignName\": \"name\",\"notificationId\": \"id 1\",}";
-        //notification.SmallIcon = "my_custom_icon_id";
-        //notification.LargeIcon = "my_custom_large_icon_id";
+        notification.Identifier = notificationID.ToString();
         notification.Title = gameParameters["localNotifTitle"].ToString();
         notification.Body = gameParameters["localNotifDesc"].ToString();
         notification.Trigger = notification.Trigger = new iOSNotificationCalendarTrigger
@@ -150,6 +115,7 @@ public class MobileNotifications : MonoBehaviour
             Second = date.Second
         };
         notification.CategoryIdentifier = "GOLD_REWARD";
+
         //Send the notification with unity mobile notifications
         iOSNotificationCenter.ScheduleNotification(notification);
         Debug.Log("Sceduled Notification");               
@@ -177,9 +143,6 @@ public class MobileNotifications : MonoBehaviour
         // Record the missionStarted event event with some event parameters. 
         DDNA.Instance.RecordEvent(localNotifications).Run();
 
-        //Get Notification id for later (Can be ignored we pass the notificaitonid with DDNA campaign game parameters)
-        //notificationID = AndroidNotificationCenter.SendNotification(notification, "channel_id");
-
     }
 
     public void CancelScheduledNotification(int notifId)
@@ -189,48 +152,22 @@ public class MobileNotifications : MonoBehaviour
 
         if (notificationStatus == NotificationStatus.Scheduled)
         {
-            // Replace the scheduled notification with a new notification.
+            // Cancel the scheduled notification.
             AndroidNotificationCenter.CancelNotification(notifId);
 
-            txtStatus.text = "Notification Cancelled "; 
+            txtStatus.text = "Android Notification Cancelled " + notifId.ToString(); 
         }
-//#elif
+#elif UNITY_IOS
+        var scheduledNotifications = iOSNotificationCenter.GetScheduledNotifications();
+
+        foreach (iOSNotification n in scheduledNotifications)
+        {
+            if (n.Identifier == notifId.ToString())
+            {
+                iOSNotificationCenter.RemoveScheduledNotification(notifId.ToString());
+                txtStatus.text = "IOS Notification Cancelled " + notifId.ToString();
+            }
+        }        
 #endif
     }
-    /*
-    /// <summary>
-    /// Replace an schedule notification
-    /// This is great to be used if for example a carrot seed has grown into a carrot. previous queued notificaiton is no longer valid
-    /// </summary>
-    public void HandleScheduledNotifications()
-    {
-
-#if UNITY_ANDROID
-
-        var newNotification = new AndroidNotification();
-        newNotification.SmallIcon = "my_custom_icon_id";
-        newNotification.LargeIcon = "my_custom_large_icon_id";
-        newNotification.Title = "New Notifications Message";
-        newNotification.Text = "This is a new notification message not original";
-        newNotification.FireTime = System.DateTime.Now.AddMinutes(1);
-
-
-        var notificationStatus = AndroidNotificationCenter.CheckScheduledNotificationStatus(notificationID);
-
-        if (notificationStatus == NotificationStatus.Scheduled)
-        {
-            // Replace the scheduled notification with a new notification.
-            AndroidNotificationCenter.UpdateScheduledNotification(notificationID, newNotification, "channel_id");
-        }
-        else if (notificationStatus == NotificationStatus.Delivered)
-        {
-            // Remove the previously shown notification from the status bar.
-            AndroidNotificationCenter.CancelNotification(notificationID);
-        }
-        else if (notificationStatus == NotificationStatus.Unknown)
-        {
-            AndroidNotificationCenter.SendNotification(newNotification, "channel_id");
-        }
-#endif
-    }*/
 }
