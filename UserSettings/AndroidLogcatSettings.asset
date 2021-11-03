@@ -1,0 +1,131 @@
+{
+    "m_SelectedDeviceId": "HVA045TZ",
+    "m_SelectedPackage": {
+        "deviceId": "HVA045TZ",
+        "name": "com.LaurieMcCulloch.UnityLocalNotifications",
+        "processId": 3226,
+        "exited": false
+    },
+    "m_SelectedPriority": 0,
+    "m_KnownPackagesForSerialization": [
+        {
+            "deviceId": "HVA045TZ",
+            "name": "com.LaurieMcCulloch.UnityLocalNotifications",
+            "processId": 29449,
+            "exited": true
+        },
+        {
+            "deviceId": "HVA045TZ",
+            "name": "com.LaurieMcCulloch.UnityLocalNotifications",
+            "processId": 30369,
+            "exited": true
+        },
+        {
+            "deviceId": "HVA045TZ",
+            "name": "com.LaurieMcCulloch.UnityLocalNotifications",
+            "processId": 31322,
+            "exited": true
+        },
+        {
+            "deviceId": "HVA045TZ",
+            "name": "com.LaurieMcCulloch.UnityLocalNotifications",
+            "processId": 7171,
+            "exited": true
+        },
+        {
+            "deviceId": "HVA045TZ",
+            "name": "com.LaurieMcCulloch.UnityLocalNotifications",
+            "processId": 10159,
+            "exited": true
+        },
+        {
+            "deviceId": "HVA045TZ",
+            "name": "com.tblenovo.launcher",
+            "processId": 23829,
+            "exited": false
+        },
+        {
+            "deviceId": "HVA045TZ",
+            "name": "com.LaurieMcCulloch.UnityLocalNotifications",
+            "processId": 11435,
+            "exited": false
+        },
+        {
+            "deviceId": "HVA045TZ",
+            "name": "com.LaurieMcCulloch.UnityLocalNotifications",
+            "processId": 13903,
+            "exited": false
+        },
+        {
+            "deviceId": "HVA045TZ",
+            "name": "com.LaurieMcCulloch.UnityLocalNotifications",
+            "processId": 29330,
+            "exited": false
+        },
+        {
+            "deviceId": "HVA045TZ",
+            "name": "com.LaurieMcCulloch.UnityLocalNotifications",
+            "processId": 2106,
+            "exited": false
+        },
+        {
+            "deviceId": "HVA045TZ",
+            "name": "com.LaurieMcCulloch.UnityLocalNotifications",
+            "processId": 3226,
+            "exited": false
+        }
+    ],
+    "m_Tags": {
+        "m_Entries": [
+            {
+                "m_Name": "Filter by all listed tags",
+                "m_Selected": false
+            },
+            {
+                "m_Name": "No Filter",
+                "m_Selected": true
+            },
+            {
+                "m_Name": "",
+                "m_Selected": false
+            },
+            {
+                "m_Name": "Tag Control...",
+                "m_Selected": false
+            },
+            {
+                "m_Name": "",
+                "m_Selected": false
+            },
+            {
+                "m_Name": "Unity",
+                "m_Selected": false
+            },
+            {
+                "m_Name": "CRASH",
+                "m_Selected": false
+            }
+        ]
+    },
+    "m_MemoryViewerState": {
+        "MemoryWindowHeight": 300.0,
+        "MemoryWindowWidth": 170.0,
+        "MemoryTypeEnabled": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+        ],
+        "MemoryGroup": 2,
+        "Behavior": 0
+    },
+    "m_Filter": "",
+    "m_FilterIsRegularExpression": false,
+    "m_SymbolPaths": []
+}

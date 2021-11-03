@@ -8,21 +8,34 @@ public class DDNA_Manager : MonoBehaviour
 {
     [SerializeField]  private  MobileNotifications oMobileNotif;
 
-    // Start is called before the first frame update
-    void Start()
+    // Get the DDNA SDK running asap, Awake() is called before Start(). 
+    void Awake()
     {
         DDNA.Instance.SetLoggingLevel(DeltaDNA.Logger.Level.DEBUG);
         DDNA.Instance.StartSDK();
+
         DDNA.Instance.Settings.DefaultGameParameterHandler = new GameParametersHandler(gameParameters =>
         {
-            // do something with the game parameters
+            // do something with the game parameters received from DDNA In-Game campaigns
             myGameParameterHandler(gameParameters);
         });
    
     }
 
-   
-    public void MissionCompleted(int level)
+
+    void OnApplicationPause(bool pauseStatus)
+    {
+        // Record a gamePaused or gameResumed event based on the pauseStatus       
+        string eventName = pauseStatus == true ? "gamePaused" : "gameResumed";
+
+        // Take Note - The DDNA SDK is started on Awake(), not on Start()
+        // as OnApplicationPause() occurs before Start()       
+        DDNA.Instance.RecordEvent(eventName).Run();        
+    }
+
+
+
+     public void MissionCompleted(int level)
     {
         GameEvent missionComplete = new GameEvent("missionCompleted")
             .AddParam("missionName", "Mission " + level.ToString())
@@ -32,12 +45,14 @@ public class DDNA_Manager : MonoBehaviour
         DDNA.Instance.RecordEvent(missionComplete).Run();
     }
 
-     private void myGameParameterHandler(Dictionary<string, object> gameParameters)
+
+
+    private void myGameParameterHandler(Dictionary<string, object> gameParameters)
     {
         // Generic Game Parameter Handler
         Debug.Log("Received game parameters from Engage campaign: " + DeltaDNA.MiniJSON.Json.Serialize(gameParameters));
 
-        //If we have a localnotificaiton game parameter being sent
+        // Catch Game parameters thaty control local notifications 
         if (gameParameters.ContainsKey("localNotifTitle"))
         {
             if(gameParameters["localNotifTitle"].ToString().Contains("CANCEL"))
