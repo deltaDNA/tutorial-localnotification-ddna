@@ -4,7 +4,7 @@
 
 Local notifications can be used to encourage players to return to a game. 
 
-Unlike Remote notifications that are scheduled and deliverd from a server and typically have a slower cadence, local notifications are scheduled on the client and can therefore be used for scenarios with more immediate requirements.
+Unlike Remote notifications that are scheduled and delivered from a server and typically have a slower cadence, local notifications are scheduled on the client and can therefore be used for scenarios with more immediate requirements.
 
 This tutorial demonstrates how to use deltaDNA player segments and Event Triggered Campaigns to remotely control the precise targeting and timing of local notifications. You can trigger notifications to be delivered within a few minutes of the player triggering an action in the game. This tutorial applies to **iOS** and **Android** devices.
 
@@ -136,7 +136,7 @@ We will send the **Local Notification, Power Restored** Game Parameters action f
 
 ### Cancelling Notifications
 
-Two additinal Event Triggered Campaigns and corresponding Game Parameter Actions have been created to **Cancel** each scheduled notification if the player records a specific event that indicates that the notification is no longer relevant. 
+Two additional Event Triggered Campaigns and corresponding Game Parameter Actions have been created to **Cancel** each scheduled notification if the player records a specific event that indicates that the notification is no longer relevant. 
 
 In each case the Game Parameter action contains 2 game Parameters that are used by the game client to delete the specific notification.
 
